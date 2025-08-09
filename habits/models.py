@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
 from django.conf import settings
+import pytz
 
 class Badge(models.Model):
     name = models.CharField(max_length=100)
@@ -23,6 +24,7 @@ class Habit(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="habits")
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
+    emoji = models.CharField(max_length=10, default='📝', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -45,6 +47,17 @@ class Habit(models.Model):
                 else:
                     break
         return streak
+    
+    def completion_rate(self):
+        """Calculate completion rate for the last 7 days"""
+        today = timezone.now().date()
+        week_ago = today - timedelta(days=7)
+        total_days = 7
+        completed_days = self.logs.filter(
+            completed_at__range=[week_ago, today],
+            is_completed=True
+        ).count()
+        return round((completed_days / total_days) * 100) if total_days > 0 else 0
 
 class HabitLog(models.Model):
     habit = models.ForeignKey(Habit, on_delete=models.CASCADE, related_name="logs")

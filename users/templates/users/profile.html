@@ -1,12 +1,108 @@
+
 {% extends 'habits/base.html' %}
 
 {% block title %}Profile - Habitual{% endblock %}
 
 {% block content %}
-    <h2>Profile</h2>
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <h2>{{ user.username }}'s Profile</h2>
+        <p class="text-muted">Manage your account settings and view your progress</p>
+    </div>
+    
+    <div class="profile-stats">
+        <div class="stat-card">
+            <div class="stat-number">{{ user.habits.count }}</div>
+            <div class="stat-label">Total Habits</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ total_completions|default:0 }}</div>
+            <div class="stat-label">Completions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ longest_streak|default:0 }}</div>
+            <div class="stat-label">Longest Streak</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ user.badges.count|default:0 }}</div>
+            <div class="stat-label">Badges Earned</div>
+        </div>
+    </div>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="form-header">
+        <h3><i class="fas fa-edit"></i> Update Profile Information</h3>
+    </div>
+    
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Update Profile</button>
+        
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">
+                    {% if field.name == 'username' %}
+                        <i class="fas fa-user"></i>
+                    {% elif field.name == 'email' %}
+                        <i class="fas fa-envelope"></i>
+                    {% elif field.name == 'first_name' %}
+                        <i class="fas fa-id-card"></i>
+                    {% elif field.name == 'last_name' %}
+                        <i class="fas fa-id-card"></i>
+                    {% elif field.name == 'timezone' %}
+                        <i class="fas fa-clock"></i>
+                    {% else %}
+                        <i class="fas fa-cog"></i>
+                    {% endif %}
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if field.help_text %}
+                    <small class="helptext">{{ field.help_text }}</small>
+                {% endif %}
+            </div>
+        {% endfor %}
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Update Profile
+            </button>
+            <a href="{% url 'habits:index' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
     </form>
+    
+    {% if user.badges.all %}
+        <div class="profile-section">
+            <h3><i class="fas fa-trophy"></i> Your Badges</h3>
+            <div class="badges-grid">
+                {% for user_badge in user.badges.all %}
+                    <div class="badge-card">
+                        <div class="badge-icon">🏆</div>
+                        <h5>{{ user_badge.badge.name }}</h5>
+                        <p>{{ user_badge.badge.description }}</p>
+                        <small>Earned on {{ user_badge.awarded_at|date:"M d, Y" }}</small>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

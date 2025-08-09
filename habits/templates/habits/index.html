@@ -3,30 +3,84 @@
 {% block title %}Dashboard - Habitual{% endblock %}
 
 {% block content %}
-    <div class="d-flex justify-content-between align-items-center">
-        <h2>Welcome, {{ user.username }}!</h2>
-        <a href="{% url 'habits:logout' %}" class="btn btn-danger">Logout</a>
+    <div class="welcome-header">
+        <h2>Welcome back, {{ user.username }}! 🌟</h2>
+        <p class="text-muted">Ready to build some amazing habits today?</p>
+        <a href="{% url 'habits:logout' %}" class="btn btn-danger btn-sm">Logout</a>
     </div>
-    <hr>
-    <a href="{% url 'habits:add_habit' %}" class="btn btn-primary mb-3">Add Habit</a>
-    <a href="{% url 'habits:log_mood' %}" class="btn btn-info mb-3">Log Mood</a>
-    <a href="{% url 'habits:export_data' %}" class="btn btn-secondary mb-3">Export Data</a>
 
-    <h3>Your Habits</h3>
+    <!-- Statistics Cards -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon">🔥</div>
+            <div class="stat-info">
+                <h4>{{ total_streaks }}</h4>
+                <p>Total Streaks</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-info">
+                <h4>{{ completed_today }}</h4>
+                <p>Completed Today</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-info">
+                <h4>{{ total_habits }}</h4>
+                <p>Total Habits</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <a href="{% url 'habits:add_habit' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Habit
+        </a>
+        <a href="{% url 'habits:log_mood' %}" class="btn btn-info">
+            <i class="fas fa-smile"></i> Log Mood
+        </a>
+        <a href="{% url 'habits:export_data' %}" class="btn btn-secondary">
+            <i class="fas fa-download"></i> Export Data
+        </a>
+    </div>
+
+    <h3><i class="fas fa-list-check"></i> Your Habits</h3>
     {% if habits %}
-        <ul class="list-group mb-4">
+        <div class="habit-cards">
             {% for habit in habits %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>{{ habit.name }} <span class="badge badge-info">{{ habit.current_streak }} day streak</span></span>
-                    <div>
-                        <a href="#" class="btn btn-success btn-sm log-habit" data-habit-id="{{ habit.id }}">Mark as Completed</a>
-                        <a href="{% url 'habits:edit_habit' habit.id %}" class="btn btn-secondary btn-sm">Edit</a>
+                <div class="habit-card">
+                    <div class="habit-emoji">{{ habit.emoji|default:"📝" }}</div>
+                    <div class="habit-info">
+                        <h5>{{ habit.name }}</h5>
+                        <p class="streak-text">
+                            <i class="fas fa-fire"></i> {{ habit.current_streak }} day streak
+                        </p>
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ habit.completion_rate }}%"></div>
+                            </div>
+                            <span class="progress-text">{{ habit.completion_rate }}% this week</span>
+                        </div>
                     </div>
-                </li>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn btn-success btn-sm log-habit" data-habit-id="{{ habit.id }}">
+                            <i class="fas fa-check"></i> Complete
+                        </button>
+                        <a href="{% url 'habits:edit_habit' habit.id %}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
-        <p>You haven't added any habits yet.</p>
+        <div class="text-center py-5">
+            <i class="fas fa-plus-circle fa-3x text-muted mb-3"></i>
+            <p class="text-muted">You haven't added any habits yet. Start building great habits today!</p>
+            <a href="{% url 'habits:add_habit' %}" class="btn btn-primary">Add Your First Habit</a>
+        </div>
     {% endif %}
 
     <h3>Your Badges</h3>

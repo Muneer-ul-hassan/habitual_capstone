@@ -9,9 +9,20 @@ class RegisterForm(UserCreationForm):
         fields = UserCreationForm.Meta.fields + ('email',)
 
 class HabitForm(forms.ModelForm):
+    emoji = forms.CharField(
+        max_length=10,
+        initial='📝',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'readonly': True,
+            'style': 'font-size: 2rem; text-align: center;'
+        }),
+        help_text="Click an emoji below to select it for your habit"
+    )
+    
     class Meta:
         model = Habit
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'emoji']
 
 class MoodLogForm(forms.ModelForm):
     class Meta:

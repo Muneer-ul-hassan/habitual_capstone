@@ -15,7 +15,25 @@ import csv
 def index(request):
     habits = Habit.objects.filter(user=request.user)
     mood_logs = MoodLog.objects.filter(user=request.user).order_by('-logged_at')[:7]
-    return render(request, 'habits/index.html', {'habits': habits, 'mood_logs': mood_logs})
+    
+    # Calculate statistics
+    total_streaks = sum(habit.current_streak() for habit in habits)
+    today = timezone.now().date()
+    completed_today = HabitLog.objects.filter(
+        habit__user=request.user,
+        completed_at=today,
+        is_completed=True
+    ).count()
+    total_habits = habits.count()
+    
+    context = {
+        'habits': habits,
+        'mood_logs': mood_logs,
+        'total_streaks': total_streaks,
+        'completed_today': completed_today,
+        'total_habits': total_habits,
+    }
+    return render(request, 'habits/index.html', context)
 
 def register_view(request):
     if request.method == 'POST':
