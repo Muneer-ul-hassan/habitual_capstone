@@ -1,0 +1,56 @@
+{% extends 'habits/base.html' %}
+
+{% block title %}Dashboard - Habitual{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Welcome, {{ user.username }}!</h2>
+        <a href="{% url 'habits:logout' %}" class="btn btn-danger">Logout</a>
+    </div>
+    <hr>
+    <a href="{% url 'habits:add_habit' %}" class="btn btn-primary mb-3">Add Habit</a>
+    <a href="{% url 'habits:log_mood' %}" class="btn btn-info mb-3">Log Mood</a>
+    <a href="{% url 'habits:export_data' %}" class="btn btn-secondary mb-3">Export Data</a>
+
+    <h3>Your Habits</h3>
+    {% if habits %}
+        <ul class="list-group mb-4">
+            {% for habit in habits %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>{{ habit.name }} <span class="badge badge-info">{{ habit.current_streak }} day streak</span></span>
+                    <div>
+                        <a href="#" class="btn btn-success btn-sm log-habit" data-habit-id="{{ habit.id }}">Mark as Completed</a>
+                        <a href="{% url 'habits:edit_habit' habit.id %}" class="btn btn-secondary btn-sm">Edit</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You haven't added any habits yet.</p>
+    {% endif %}
+
+    <h3>Your Badges</h3>
+    {% if user.badges.all %}
+        <div class="mb-4">
+            {% for user_badge in user.badges.all %}
+                <span class="badge badge-warning">{{ user_badge.badge.name }}</span>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You haven't earned any badges yet.</p>
+    {% endif %}
+
+    <h3>Your Mood History (Last 7 Days)</h3>
+    {% if mood_logs %}
+        <ul class="list-group mb-4">
+            {% for log in mood_logs %}
+                <li class="list-group-item">{{ log.logged_at }}: {{ log.get_mood_display }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You haven't logged your mood yet.</p>
+    {% endif %}
+    
+    <h3>Your Progress</h3>
+    <canvas id="habitChart"></canvas>
+{% endblock %}

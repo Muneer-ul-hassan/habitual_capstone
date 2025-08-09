@@ -1,0 +1,14 @@
+{% extends 'habits/base.html' %}
+
+{% block title %}Edit Habit - Habitual{% endblock %}
+
+{% block content %}
+    <h2>Edit Habit</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+    <hr>
+    <a href="{% url 'habits:delete_habit' habit.id %}" class="btn btn-danger">Delete Habit</a>
+{% endblock %}

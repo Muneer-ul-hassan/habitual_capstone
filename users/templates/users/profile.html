@@ -1,0 +1,12 @@
+{% extends 'habits/base.html' %}
+
+{% block title %}Profile - Habitual{% endblock %}
+
+{% block content %}
+    <h2>Profile</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </form>
+{% endblock %}

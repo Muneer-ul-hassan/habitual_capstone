@@ -1,0 +1,170 @@
+/* Add custom styles here */
+body {
+    background-color: #f8f9fa;
+}
+
+/* Habit Cards */
+.habit-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.habit-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 1rem;
+    width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.habit-info {
+    flex: 1;
+}
+
+.habit-info h5 {
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
+}
+
+.streak-text {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.habit-image img {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+.btn-complete {
+    background-color: #d87f2a;
+    border: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-complete:hover {
+    background-color: #b36b22;
+}
+
+/* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #d87f2a;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Progress Overview */
+.progress-overview {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+}
+
+/* Footer */
+.footer {
+    background-color: #d87f2a;
+    color: white;
+    padding: 1rem 0;
+}
+
+.footer a {
+    color: white;
+    text-decoration: underline;
+}
+
+.footer .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer .contact-info p {
+    margin: 0;
+}
+
+.social-icons a {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-left: 1rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.social-icon.facebook {
+    background-image: url('/static/habits/images/facebook.svg');
+}
+
+.social-icon.twitter {
+    background-image: url('/static/habits/images/twitter.svg');
+}
+
+.social-icon.instagram {
+    background-image: url('/static/habits/images/instagram.svg');
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+    .habit-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .progress-overview {
+        flex-direction: column;
+        align-items: center;
+    }
+}
